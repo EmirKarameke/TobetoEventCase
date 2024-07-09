@@ -1,9 +1,6 @@
-﻿using Blazored.LocalStorage;
-using EventCase.Application.Contract.Members.Dtos;
-using EventCase.Blazor.Web.Providers;
+﻿using EventCase.Application.Contract.Members.Dtos;
 using EventCase.Blazor.Web.Services;
 using Microsoft.AspNetCore.Components;
-using static EventCase.Blazor.Web.Pages.LoginPage;
 using System.Text;
 using System.Text.Json;
 

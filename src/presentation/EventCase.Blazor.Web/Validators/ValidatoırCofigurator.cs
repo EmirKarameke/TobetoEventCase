@@ -1,7 +1,6 @@
 ﻿using EventCase.Application.Contract.Employees.Dtos;
 using EventCase.Application.Contract.Members.Dtos;
 using FluentValidation;
-using System.Runtime.CompilerServices;
 
 namespace EventCase.Blazor.Web.Validators
 {

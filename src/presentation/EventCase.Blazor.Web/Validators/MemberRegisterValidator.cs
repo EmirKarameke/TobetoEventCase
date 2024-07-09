@@ -1,6 +1,5 @@
 ﻿using EventCase.Application.Contract.Members.Dtos;
 using FluentValidation;
-using System.IO.Compression;
 
 namespace EventCase.Blazor.Web.Validators
 {

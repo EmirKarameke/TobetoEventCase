@@ -11,7 +11,7 @@ namespace EventCase.Application.Employees.MapProfiles
         {
             CreateMap<MemberDto, Member>().ReverseMap();
             CreateMap<MemberRegisterDto, Member>().ReverseMap();
-            
+
         }
     }
 }

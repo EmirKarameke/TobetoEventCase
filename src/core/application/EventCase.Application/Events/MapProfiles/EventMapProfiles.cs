@@ -4,9 +4,9 @@ using EventCase.Domain.Events;
 
 namespace EventCase.Application.Events.MapProfiles;
 
-public class EventMapProfiles : Profile
+public class EventMapProfile : Profile
 {
-    public EventMapProfiles()
+    public EventMapProfile()
     {
         CreateMap<EventDto, Event>().ReverseMap();
     }

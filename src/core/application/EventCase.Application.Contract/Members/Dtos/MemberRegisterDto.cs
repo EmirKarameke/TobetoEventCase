@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EventCase.Application.Contract.Members.Dtos;
+﻿namespace EventCase.Application.Contract.Members.Dtos;
 
 public class MemberRegisterDto
 {

@@ -104,7 +104,7 @@ public class AuthService<TKey> : IAuthService<TKey>
         return true;
     }
 
-    public async Task<bool> Register(IUser<TKey> user,string password)
+    public async Task<bool> Register(IUser<TKey> user, string password)
     {
 
         CreatePassword(password, out var passwordHash, out var passwordSalt);

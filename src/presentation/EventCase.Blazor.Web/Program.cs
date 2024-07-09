@@ -13,8 +13,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
-builder.Services.AddScoped<IHttpService,HttpService>();
+builder.Services.AddScoped<IHttpService, HttpService>();
 
+builder.Services.AddScoped<ServiceRequestBase>();
 
 builder.Services.AddAuthorizationCore();
 builder.Services

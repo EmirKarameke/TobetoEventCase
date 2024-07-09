@@ -1,4 +1,8 @@
-﻿<nav class="navbar navbar-expand-lg bg-body-tertiary">
+﻿@using EventCase.Blazor.Web.Providers
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider authState;
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,18 +35,49 @@
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
-            <Dropdown>
-                <DropdownToggle>
-                   
-                    <Icon Name="IconName.User" />
-                </DropdownToggle>
-                <DropdownMenu>
-                    <DropdownItem href="Login" >Login</DropdownItem>
-                    <DropdownDivider />
-                    <DropdownItem href="Register">Register</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
+            @if (_isTokenExist)
+            {
+                <Dropdown>
+                    <DropdownToggle>
+                        @userName
+                        <Icon Name="IconName.User" />
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        <DropdownItem>Profile</DropdownItem>
+                        <DropdownDivider />
+                        <DropdownItem @onclick="Logout">Logout</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            }
+            else
+            {
+                <NavLink href="login">
+                    <Icon Name="IconName.UserPlus" /> Login
+                </NavLink>
+
+            }
         </div>
     </div>
 </nav>
 
+@code{
+    private bool _isTokenExist;
+    private string userName;
+    protected override async Task OnInitializedAsync()
+    {
+        _isTokenExist = await ((AuthStateProvider)authState).IsAuthentication();
+        if (_isTokenExist)
+        {
+            var user = await ((AuthStateProvider)authState).GetAuthenticationStateAsync();
+            userName = user.User.Identities.First(i => i.NameClaimType == ClaimTypes.Name).Name;
+        }
+    }
+    public void Logout()
+    {
+        if (_isTokenExist)
+        {
+            ((AuthStateProvider)authState).Logout();
+        }
+    }
+
+}

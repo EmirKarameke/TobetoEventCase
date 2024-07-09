@@ -31,7 +31,7 @@ public class MemberAppService : IMemberAppService
         }
         catch (Exception e)
         {
-            result.Success=false;
+            result.Success = false;
             result.Message = e.Message;
         }
         return result;

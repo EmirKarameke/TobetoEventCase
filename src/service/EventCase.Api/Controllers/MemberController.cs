@@ -30,20 +30,20 @@ public class MemberController : Controller
     {
         try
         {
-        Member member1 = new Member() 
-        {
-            EmailOrUserName = member.EmailOrUserName,
-            FullName = member.FullName,
-            UserName = member.UserName
-        };
-        var result = await authService.Register(member1, member.Password);
-        var response = new ServiceResponse<string>()
-        {
-            Success = result,
-            Message = result ? "BAŞARILI" : "HATA OLUŞTU"
-        };
+            Member member1 = new Member()
+            {
+                EmailOrUserName = member.EmailOrUserName,
+                FullName = member.FullName,
+                UserName = member.UserName
+            };
+            var result = await authService.Register(member1, member.Password);
+            var response = new ServiceResponse<string>()
+            {
+                Success = result,
+                Message = result ? "BAŞARILI" : "HATA OLUŞTU"
+            };
 
-        return response;
+            return response;
         }
         catch (Exception ex)
         {
