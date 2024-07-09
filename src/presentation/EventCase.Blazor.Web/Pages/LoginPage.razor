@@ -1,0 +1,32 @@
+﻿@layout MainLayout
+@page "/Login"
+@using Blazored.FluentValidation
+@using EventCase.Application.Contract.Employees.Dtos
+@using FluentValidation
+@inject AbstractValidator<MemberLoginRequest> validator
+
+<div class="shadow p-3 mb-5 bg-body-tertiary rounded w-50 p-3">
+    <EditForm Model="user" OnValidSubmit="Login">
+        <FluentValidationValidator Validator="validator"></FluentValidationValidator>
+        <div class="mb-3 w-100">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <InputText class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" @bind-Value="user.Email"></InputText>
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            <ValidationMessage For="()=>user.Email"></ValidationMessage>
+        </div>
+        <div class="mb-3 w-100">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <InputText type="password" class="form-control" id="exampleInputPassword1" @bind-Value="user.Password"></InputText>
+            <ValidationMessage For="()=>user.Password"></ValidationMessage>
+        </div>
+        <div class="mb-3 form-check w-100">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
+</div>
+
+
+
+

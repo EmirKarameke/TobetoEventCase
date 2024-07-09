@@ -1,0 +1,44 @@
+﻿@layout MainLayout
+@page "/Register"
+@using Blazored.FluentValidation
+@using EventCase.Application.Contract.Members.Dtos
+@using FluentValidation
+@inject AbstractValidator<MemberRegisterDto> validator
+
+    <div class="shadow p-3 mb-5 bg-body-tertiary rounded w-50 p-3">
+
+    <EditForm Model="member" OnValidSubmit="RegisterMember">
+    <FluentValidationValidator Validator="validator"></FluentValidationValidator>
+        <div class="mb-3 w-100">
+            <label for="exampleInputEmail1" class="form-label">Eposta Adresi</label>
+            <InputText class="form-control" @bind-Value="member.EmailOrUserName"></InputText>
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            <ValidationMessage For="()=>member.EmailOrUserName"></ValidationMessage>
+        </div>
+        <div class="mb-3 w-100">
+            <label for="exampleInputPassword1" class="form-label">Şifre</label>
+            <InputText type="password" class="form-control" id="exampleInputPassword1" @bind-Value="member.Password"></InputText>
+            <ValidationMessage For="()=>member.Password"></ValidationMessage>
+        </div>
+        <div class="mb-3 w-100">
+            <label for="exampleInputPassword1" class="form-label">Şifre Doğrulama</label>
+            <InputText type="password" class="form-control" id="exampleInputPassword1" @bind-Value="member.PasswordConfirm"></InputText>
+            <ValidationMessage For="()=>member.PasswordConfirm"></ValidationMessage>
+        </div>
+        <div class="mb-3 w-100">
+            <label for="exampleInputPassword1" class="form-label">Kullanıcı Adı</label>
+            <InputText  class="form-control" id="exampleInputPassword1" @bind-Value="member.UserName"></InputText>
+            <ValidationMessage For="()=>member.UserName"></ValidationMessage>
+        </div>
+        <div class="mb-3 w-100">
+            <label for="exampleInputPassword1" class="form-label">Ad Soyad</label>
+            <InputText  class="form-control" id="exampleInputPassword1" @bind-Value="member.FullName"></InputText>
+            <ValidationMessage For="()=>member.FullName"></ValidationMessage>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+    </div>
+
+@code {
+
+}
