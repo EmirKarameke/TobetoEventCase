@@ -41,9 +41,8 @@ public class EventAppService : IEventAppService
         var result = new ServiceResponse<bool>();
         try
         {
-            var entity = await _eventRepository.FindAsync(i => i.Id == Id);
-            var removedEntity = _mapper.Map<Event>(entity);
-            await _eventRepository.RemoveAsync(removedEntity);
+            var entity = await _eventRepository.SingleOrDefaultAsync(i => i.Id == Id);
+            await _eventRepository.RemoveAsync(entity);
             result.Success = true;
 
         }
@@ -75,8 +74,22 @@ public class EventAppService : IEventAppService
     }
 
 
-    public Task<ServiceResponse<EventDto>> Update(EventDto Event)
+    public async Task<ServiceResponse<EventDto>> Update(EventDto Event)
     {
-        throw new NotImplementedException();
+        var result = new ServiceResponse<EventDto>();
+        var oldEvent = await _eventRepository.SingleOrDefaultAsync(e => e.MemberId == Event.MemberId);
+        var updatedEvent = _mapper.Map(Event, oldEvent);
+        try
+        {
+            var entity = await _eventRepository.UpdateAsync(updatedEvent);
+            result.Success = true;
+            result.Data = _mapper.Map<EventDto>(entity);
+        }
+        catch (Exception ex)
+        {
+            result.Success = false;
+            result.Message = ex.Message;
+        }
+        return result;
     }
 }

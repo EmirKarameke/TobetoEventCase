@@ -1,5 +1,81 @@
-﻿<h3>MyEvents</h3>
+﻿@page "/myEvents"
+<Container Class="container-md">
+<Card>
+    <CardHeader>
+        Etkinlik Listesi
+        <Button Class="btn btn-primary float-end" Clicked="@ShowModal"><Icon Name="IconName.PlusCircle" /> Yeni Etkinlik Ekle</Button>
+    </CardHeader>
+    <CardBody>
+        <Table Hoverable>
+            <TableHeader>
+                <TableRow>
+                    <TableHeaderCell>Etkinlik Adı</TableHeaderCell>
+                    <TableHeaderCell>Etkinlik Tarihi</TableHeaderCell>
+                    <TableHeaderCell>Etkinlik Saati</TableHeaderCell>
+                    <TableHeaderCell>Düzenlendiği Yer</TableHeaderCell>
+                </TableRow>
+            </TableHeader>
+            @foreach (var Event in ListEvents)
+            {
+            <TableBody>
+                <TableRow>
+                    <TableRowHeader>@Event.Name</TableRowHeader>
+                    <TableRowCell>@Event.Date</TableRowCell>
+                    <TableRowCell>@Event.Time</TableRowCell>
+                        <TableRowCell>@Event.Location</TableRowCell>
+
+                </TableRow>
+            </TableBody>
+            }
+        </Table>
+    </CardBody>
+    <CardFooter>Card Footer</CardFooter>
+</Card>
+</Container>
+<Modal @ref="eventAdd">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Kitap Ekleme</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Etkinlik Adı</FieldLabel>
+                <TextEdit Placeholder="Etkinlik Adı Giriniz..." @bind-Text="EventDto.Name" />
+            </Field>
+            <Field>
+                <FieldLabel>Etkinlik Tarihi</FieldLabel>
+                <DateEdit @bind-Date="@EventDto.Date" />
+            </Field>
+            <Field>
+                <FieldLabel>Etkinlik Saati</FieldLabel>
+                <TimePicker  @bind-Time="@EventDto.Time" />
+            </Field>
+            <Field>
+                <FieldLabel>Etkinlik Yeri</FieldLabel>
+                <TextEdit @bind-Text="EventDto.Location" />
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Danger" Clicked="@HideModal">Kapat</Button>
+            <Button Color="Color.Success" Clicked="@AddEvent">Etkinlik Ekle</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
 
 @code {
+    private Modal eventAdd;
 
+    private Task ShowModal()
+    {
+        return eventAdd.Show();
+    }
+
+    private Task HideModal()
+    {
+        return eventAdd.Hide();
+    }
+    
 }

@@ -4,6 +4,7 @@ using EventCase.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventCase.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(EventCaseContext))]
-    partial class EventCaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240709154740_eventUpdate")]
+    partial class eventUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,8 +180,8 @@ namespace EventCase.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Location")
                         .IsRequired()

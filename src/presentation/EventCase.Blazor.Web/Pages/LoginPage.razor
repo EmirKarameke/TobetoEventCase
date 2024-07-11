@@ -5,7 +5,9 @@
 @using FluentValidation
 @inject AbstractValidator<MemberLoginRequest> validator
 
-<div class="shadow p-3 mb-5 bg-body-tertiary rounded w-50 p-3">
+
+<Div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class=" shadow p-3 mb-5 bg-body-tertiary rounded w-50 p-3 ">
     <EditForm Model="user" OnValidSubmit="Login">
         <FluentValidationValidator Validator="validator"></FluentValidationValidator>
         <div class="mb-3 w-100">
@@ -26,7 +28,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </EditForm>
 </div>
-
+</Div>
 
 
 
