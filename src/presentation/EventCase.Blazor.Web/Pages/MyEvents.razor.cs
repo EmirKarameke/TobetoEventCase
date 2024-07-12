@@ -14,9 +14,10 @@ public partial class MyEvents
     [Inject] AuthenticationStateProvider AuthProvider { get; set; }
     public EventDto EventDto { get; set; }
     public List<EventDto> ListEvents { get; set; }
-
+    public EventDto SelectedEvent {  get; set; }
     protected override async void OnInitialized()
     {
+        SelectedEvent = new EventDto();
         EventDto = new EventDto();
         ListEvents = new List<EventDto>();
         await GetEventList();
@@ -31,6 +32,33 @@ public partial class MyEvents
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         serviceRequestBase.Object = content;
         var result = await httpService.PostAsync<EventDto>(serviceRequestBase);
+        if (result.Success)
+        {
+            await GetEventList();
+
+        }
+    }
+
+    public async Task DeleteEvent(Guid Id)
+    {
+        ServiceRequestBase serviceRequestBase = new ServiceRequestBase();
+        serviceRequestBase.Url = serviceRequestBase.Url + "Event/DeleteEvent?Id="+Id;
+        var result = await httpService.DeleteAsync<bool>(serviceRequestBase);
+        if (result.Success)
+        {
+            await GetEventList();
+
+        }
+    }
+    public async Task UpdateEvent()
+    {
+        ServiceRequestBase serviceRequestBase = new ServiceRequestBase();
+        serviceRequestBase.Url = serviceRequestBase.Url + "Event/UpdateEvent";
+        SelectedEvent.MemberId = MemberId;
+        var json = JsonSerializer.Serialize(SelectedEvent);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        serviceRequestBase.Object = content;
+        var result = await httpService.PutAsync<EventDto>(serviceRequestBase);
         if (result.Success)
         {
             await GetEventList();

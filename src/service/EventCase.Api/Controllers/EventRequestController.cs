@@ -1,32 +1,34 @@
 ﻿using AutoMapper;
-using EventCase.Application.Contract.Events;
 using EventCase.Application.Contract.Events.Dtos;
+using EventCase.Application.Contract.Events;
 using EventCase.Application.Contract.ServiceTypes;
-using EventCase.Common.Entities;
 using EventCase.Domain.Events;
 using Microsoft.AspNetCore.Mvc;
+using EventCase.Application.Contract.EventRequests;
+using EventCase.Application.Contract.EventRequests.Dtos;
+using EventCase.Domain.EventRequests;
 
 namespace EventCase.Api.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]/")]
-public class EventController : Controller
+public class EventRequestController : Controller
 {
     private readonly IMapper _mapper;
-    private readonly IEventAppService _eventAppService;
-    public EventController(IMapper mapper, IEventAppService eventAppService)
+    private readonly IEventRequestAppService _eventRequestAppService;
+    public EventRequestController(IMapper mapper, IEventRequestAppService eventRequestAppService)
     {
         _mapper = mapper;
-        _eventAppService = eventAppService;
+        _eventRequestAppService = eventRequestAppService;
     }
 
     [HttpPost]
-    public async Task<ServiceResponse<EventDto>> CreateEvent(EventDto Event)
+    public async Task<ServiceResponse<EventRequestDto>> CreateEvent(EventRequestDto eventRequest)
     {
         try
         {
-            var result = await _eventAppService.Create(Event);
-            var response = new ServiceResponse<EventDto>()
+            var result = await _eventRequestAppService.Create(eventRequest);
+            var response = new ServiceResponse<EventRequestDto>()
             {
                 Success = true,
                 Data = result.Data
@@ -35,7 +37,7 @@ public class EventController : Controller
         }
         catch (Exception ex)
         {
-            var response = new ServiceResponse<EventDto>()
+            var response = new ServiceResponse<EventRequestDto>()
             {
                 Success = false,
                 Message = ex.Message
@@ -46,12 +48,12 @@ public class EventController : Controller
 
     [HttpGet]
 
-    public async Task<ServiceResponse<List<Event>>> GetAllEvents()
+    public async Task<ServiceResponse<List<EventRequest>>> GetAllEvents()
     {
         try
         {
-            var entities = await _eventAppService.GetList();
-            var response = new ServiceResponse<List<Event>>()
+            var entities = await _eventRequestAppService.GetList();
+            var response = new ServiceResponse<List<EventRequest>>()
             {
                 Success = true,
                 Data = entities.Data
@@ -66,12 +68,12 @@ public class EventController : Controller
 
     }
     [HttpPut]
-    public async Task<ServiceResponse<EventDto>> UpdateEvent(EventDto Event)
+    public async Task<ServiceResponse<EventRequestDto>> UpdateEvent(EventRequestDto eventRequest)
     {
         try
         {
-            var entitiy = await _eventAppService.Update(Event);
-            var response = new ServiceResponse<EventDto>()
+            var entitiy = await _eventRequestAppService.Update(eventRequest);
+            var response = new ServiceResponse<EventRequestDto>()
             {
                 Success = true,
                 Data = entitiy.Data
@@ -89,7 +91,7 @@ public class EventController : Controller
     {
         try
         {
-            return await _eventAppService.Delete(Id);
+            return await _eventRequestAppService.Delete(Id);
 
         }
         catch (Exception ex)

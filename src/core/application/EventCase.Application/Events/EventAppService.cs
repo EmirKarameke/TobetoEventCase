@@ -44,6 +44,7 @@ public class EventAppService : IEventAppService
             var entity = await _eventRepository.SingleOrDefaultAsync(i => i.Id == Id);
             await _eventRepository.RemoveAsync(entity);
             result.Success = true;
+            result.Data = true;
 
         }
         catch (Exception ex)
@@ -77,7 +78,7 @@ public class EventAppService : IEventAppService
     public async Task<ServiceResponse<EventDto>> Update(EventDto Event)
     {
         var result = new ServiceResponse<EventDto>();
-        var oldEvent = await _eventRepository.SingleOrDefaultAsync(e => e.MemberId == Event.MemberId);
+        var oldEvent = await _eventRepository.SingleOrDefaultAsync(e => e.Id == Event.Id);
         var updatedEvent = _mapper.Map(Event, oldEvent);
         try
         {

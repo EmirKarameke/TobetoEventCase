@@ -1,9 +1,10 @@
 ﻿@page "/myEvents"
+@using EventCase.Application.Contract.Events.Dtos
 <Container Class="container-md">
 <Card>
     <CardHeader>
         Etkinlik Listesi
-        <Button Class="btn btn-primary float-end" Clicked="@ShowModal"><Icon Name="IconName.PlusCircle" /> Yeni Etkinlik Ekle</Button>
+            <Button Class="btn btn-primary float-end" Clicked="@ShowAddModal"><Icon Name="IconName.PlusCircle" /> Yeni Etkinlik Ekle</Button>
     </CardHeader>
     <CardBody>
         <Table Hoverable>
@@ -13,6 +14,8 @@
                     <TableHeaderCell>Etkinlik Tarihi</TableHeaderCell>
                     <TableHeaderCell>Etkinlik Saati</TableHeaderCell>
                     <TableHeaderCell>Düzenlendiği Yer</TableHeaderCell>
+                    <TableHeaderCell>Etkinliği Düzenle</TableHeaderCell>
+                    <TableHeaderCell>Etkinliği Sil</TableHeaderCell>
                 </TableRow>
             </TableHeader>
             @foreach (var Event in ListEvents)
@@ -22,8 +25,9 @@
                     <TableRowHeader>@Event.Name</TableRowHeader>
                     <TableRowCell>@Event.Date</TableRowCell>
                     <TableRowCell>@Event.Time</TableRowCell>
-                        <TableRowCell>@Event.Location</TableRowCell>
-
+                    <TableRowCell>@Event.Location</TableRowCell>
+                    <TableRowCell><Button Color="Color.Warning" Clicked=" () => ShowUpdateModal(Event)">Düzenle</Button></TableRowCell>
+                    <TableRowCell><Button Color="Color.Danger" Clicked=" () => DeleteEvent(Event.Id)">Sil</Button></TableRowCell>
                 </TableRow>
             </TableBody>
             }
@@ -35,7 +39,7 @@
 <Modal @ref="eventAdd">
     <ModalContent Centered>
         <ModalHeader>
-            <ModalTitle>Kitap Ekleme</ModalTitle>
+            <ModalTitle>Etkinlik Ekleme</ModalTitle>
             <CloseButton />
         </ModalHeader>
         <ModalBody>
@@ -57,25 +61,62 @@
             </Field>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Danger" Clicked="@HideModal">Kapat</Button>
+            <Button Color="Color.Danger" Clicked="@HideAddModal">Kapat</Button>
             <Button Color="Color.Success" Clicked="@AddEvent">Etkinlik Ekle</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
 
+<Modal @ref="eventUpdate">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Etkinlik Güncelleme</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Etkinlik Adı</FieldLabel>
+                <TextEdit Placeholder="Etkinlik Adı Giriniz..." @bind-Text="SelectedEvent.Name" />
+            </Field>
+            <Field>
+                <FieldLabel>Etkinlik Tarihi</FieldLabel>
+                <DateEdit @bind-Date="@SelectedEvent.Date" />
+            </Field>
+            <Field>
+                <FieldLabel>Etkinlik Saati</FieldLabel>
+                <TimePicker @bind-Time="@SelectedEvent.Time" />
+            </Field>
+            <Field>
+                <FieldLabel>Etkinlik Yeri</FieldLabel>
+                <TextEdit @bind-Text="SelectedEvent.Location" />
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Danger" Clicked="@HideAddModal">Kapat</Button>
+            <Button Color="Color.Warning" Clicked="@UpdateEvent">Etkinlik Güncelle</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
 
 
 @code {
     private Modal eventAdd;
-
-    private Task ShowModal()
+    private Modal eventUpdate;
+    private Task ShowAddModal()
     {
         return eventAdd.Show();
     }
-
-    private Task HideModal()
+    private Task ShowUpdateModal(EventDto eventDto)
+    {
+        SelectedEvent = eventDto;
+        return eventUpdate.Show();
+    }
+    private Task HideAddModal()
     {
         return eventAdd.Hide();
     }
-    
+    private Task HideUpdateModal()
+    {
+        return eventUpdate.Hide();
+    }
 }

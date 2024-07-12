@@ -1,4 +1,5 @@
 ﻿using EventCase.Domain.Employees;
+using EventCase.Domain.EventRequests;
 using EventCase.Domain.Events;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -16,6 +17,7 @@ public class EventCaseContext : DbContext
 
     public DbSet<Event> Events { get; set; }
     public DbSet<Member> Members { get; set; }
+    public DbSet<EventRequest> EventRequest { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Member>(b =>
