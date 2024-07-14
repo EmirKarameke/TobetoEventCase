@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using EventCase.Application.Contract.EventRequests;
 using EventCase.Application.Contract.EventRequests.Dtos;
+using EventCase.Application.Contract.Events.Dtos;
 using EventCase.Application.Contract.ServiceTypes;
+using EventCase.Common.List;
 using EventCase.Domain.EventRequests;
 
 namespace EventCase.Application.EventRequests;
@@ -20,7 +22,7 @@ public class EventRequestAppService : IEventRequestAppService
     public async Task<ServiceResponse<EventRequestDto>> Create(EventRequestDto eventRequest)
     {
         var result = new ServiceResponse<EventRequestDto>();
-        BusinessExeptions.CheckRequestTime(eventRequest);
+        await BusinessExeptions.CheckRequestTime(eventRequest);
         var createdEvent = _mapper.Map<EventRequest>(eventRequest);
         try
         {
@@ -92,15 +94,25 @@ public class EventRequestAppService : IEventRequestAppService
         return result;
     }
 
-    public async Task<ServiceResponse<List<EventRequestDto>>> GetListById(Guid Id)
+    public async Task<ServiceResponse<PagedList<EventRequestWithMemberDto>>> GetListById(Guid Id, int pageNumber)
     {
-        var result = new ServiceResponse<List<EventRequestDto>>();
+        var result = new ServiceResponse<PagedList<EventRequestWithMemberDto>>();
         try
         {
             var requestList = await _eventRequestRepository.FindAsync(r => r.EventId == Id, i => i.Member);
-            var requests = _mapper.Map<List<EventRequestDto>>(requestList);
+            var totalCount = requestList.Count();
+            int pageSize = 10;
+            var displayResult = requestList.OrderBy(i => i.MemberId = i.Member.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(i => _mapper.Map<EventRequestWithMemberDto>(i)).ToList();
+            var list = new PagedList<EventRequestWithMemberDto>()
+            {
+                TotalRowCount = totalCount,
+                DisplayedResult = displayResult
+            };
+            list.SetPageNumbers();
+            
+            //var requests = requestList.Select(i => _mapper.Map<EventRequestWithMemberDto>(i)).ToList();
             result.Success = true;
-            result.Data = requests;
+            result.Data = list;
         }
         catch (Exception ex)
         {
@@ -110,10 +122,11 @@ public class EventRequestAppService : IEventRequestAppService
         return result;
     }
 
+
     public async Task<ServiceResponse<EventRequestDto>> Update(EventRequestDto eventRequest)
     {
         var result = new ServiceResponse<EventRequestDto>();
-        BusinessExeptions.CheckRequestTime(eventRequest);
+        await BusinessExeptions.CheckRequestTime(eventRequest);
         var oldEvent = await _eventRequestRepository.SingleOrDefaultAsync(e => e.Id == eventRequest.Id);
         var updatedEvent = _mapper.Map(eventRequest, oldEvent);
         try

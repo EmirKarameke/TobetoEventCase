@@ -11,6 +11,6 @@ public class EventRequest : IEntity<Guid>
     public Guid EventId { get; set; }
     public Event Event { get; set; }
     public Guid MemberId { get; set; }
-    public Member Member { get; set; }
+    public Member Member  { get; set; }
     public RequestStatu RequestStatu { get; set; }
 }

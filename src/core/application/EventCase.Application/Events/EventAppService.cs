@@ -42,7 +42,7 @@ public class EventAppService : IEventAppService
         }
         return result;
     }
-
+    
     public async Task<ServiceResponse<bool>> Delete(Guid Id)
     {
         var result = new ServiceResponse<bool>();
@@ -59,6 +59,24 @@ public class EventAppService : IEventAppService
             result.Success = false;
             result.Message = ex.Message;
 
+        }
+        return result;
+    }
+
+    public async Task<ServiceResponse<EventDto>> GetEvent(Guid Id)
+    {
+        var result = new ServiceResponse<EventDto>();
+        try
+        {
+            var entity = await _eventRepository.SingleOrDefaultAsync(i => i.Id == Id);
+            var Event = _mapper.Map<EventDto>(entity);
+
+            result.Success = true;
+            result.Data = Event;
+        }
+        catch (Exception ex) 
+        {
+            result.Success = false;
         }
         return result;
     }
@@ -122,4 +140,5 @@ public class EventAppService : IEventAppService
         }
         return result;
     }
+    
 }

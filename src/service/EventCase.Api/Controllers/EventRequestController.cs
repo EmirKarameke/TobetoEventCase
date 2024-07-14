@@ -2,12 +2,13 @@
 using EventCase.Application.Contract.EventRequests;
 using EventCase.Application.Contract.EventRequests.Dtos;
 using EventCase.Application.Contract.ServiceTypes;
+using EventCase.Common.List;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventCase.Api.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]/{id?}")]
+[Route("[controller]/[action]/")]
 public class EventRequestController : Controller
 {
     private readonly IMapper _mapper;
@@ -66,7 +67,7 @@ public class EventRequestController : Controller
 
 
     [HttpGet]
-    public async Task<ServiceResponse<List<EventRequestDto>>> GetAllEventRequestsByMemberId(Guid id)
+    public async Task<ServiceResponse<List<EventRequestDto>>> GetAllEventRequestsByMemberId([FromQuery]Guid id)
     {
         try
         {
@@ -85,7 +86,24 @@ public class EventRequestController : Controller
 
 
     }
-
+    [HttpGet]
+    public async Task<ServiceResponse<PagedList<EventRequestWithMemberDto>>> GetListByEventId(Guid Id, int pageNumber)
+    {
+        try
+        {
+            var requests = await _eventRequestAppService.GetListById(Id,pageNumber);
+            var response = new ServiceResponse<PagedList<EventRequestWithMemberDto>>()
+            {
+                Success = true,
+                Data = requests.Data
+            };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
 
     [HttpPut]
     public async Task<ServiceResponse<EventRequestDto>> UpdateEventRequest(EventRequestDto eventRequest)

@@ -1,7 +1,194 @@
 ﻿@page "/event-detail-{EventId}"
+@using EventCase.Domain.EventRequests.Enums 
 
-<h3>EventDetailPage</h3>
-@EventId
+<div class="control-section d-flex p-2">
+    <div class="bg-light border rounded p-3 shadow mx-auto" style="width: 250px;">
+        <div class="mx-auto">
+            <p>Etkinlik Adı : @Event.Name </p>
+        </div>
+        <div class="mx-auto">
+            <p>Etkinlik Tarihi : @Event.Date </p>
+        </div>
+        <div class="mx-auto">
+            <p>Etkinlik Saati : @Event.Time </p>
+        </div>
+        <div class="mx-auto">
+            <p>Etkinlik Yeri : @Event.Location </p>
+        </div>
+@*         <div class="mx-auto">
+            <p>Etkinlik Id : @EventId </p>
+        </div> *@
+    </div>
+</div>
+
+<div class="col-8 col-md-12 col-lg-8 m-auto">
+    <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged">
+        <Items>
+            <Tab Name="Requests">İstekler</Tab>
+            <Tab Name="Aproved">Kabul Edilenler</Tab>
+            <Tab Name="Rejected">Reddedilenler</Tab>
+        </Items>
+        <Content>
+            <TabPanel Name="Requests">
+                <Container Class="mg-top 5">
+                    <Card>
+                        <CardBody>
+                            <Table Hoverable>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHeaderCell>İsteği Atan</TableHeaderCell>
+                                        <TableHeaderCell>#</TableHeaderCell>
+                                        <TableHeaderCell>#</TableHeaderCell>
+                                    </TableRow>
+                                </TableHeader>
+                                @foreach (var Event in EventRequest.DisplayedResult.Where(i => i.RequestStatu == RequestStatu.Beklemede))
+                                {
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableRowCell>@Event.Member.FullName</TableRowCell>
+                                            <TableRowCell><Button Color="Color.Success" Clicked="() => AproveRequest(Event.Id)"> Kabul et </Button></TableRowCell>
+                                            <TableRowCell><Button Color="Color.Danger" Clicked=" () => RejectRequest(Event.Id)">Reddet</Button></TableRowCell>
+                                        </TableRow>
+                                    </TableBody>
+                                }
+                                <Pagination class="col-8 col-md-12 col-lg-8 m-auto">
+                                    <PaginationItem @onclick="Previous">
+                                        <PaginationLink>
+                                            <span aria-hidden="true">«</span>
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                    @{
+                                        foreach (var i in EventRequest.DisplayedPageNumbers)
+                                        {
+                                            var pageNumberAsString = i.ToString();
+                                            <PaginationItem @key="pageNumberAsString" Active="@(EventRequest.CurrentPage == i)">
+                                                <PaginationLink Page="@pageNumberAsString" Clicked="async ()=>{await GoToPage(i);}">
+                                                    @pageNumberAsString
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                        }
+                                    }
+                                    <PaginationItem @onclick="Next">
+                                        <PaginationLink>
+                                            <span aria-hidden="true">»</span>
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                </Pagination>
+                            </Table>
+
+                        </CardBody>
+                    </Card>
+                </Container>
+            </TabPanel>
+            <TabPanel Name="Aproved" >
+                <Container Class="mg-top 5">
+                    <Card>
+                        <CardBody>
+                            <Table Hoverable>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHeaderCell>İsteği Atan</TableHeaderCell>
+                                        <TableHeaderCell>#</TableHeaderCell>
+                                    </TableRow>
+                                </TableHeader>
+                                @foreach (var Event in EventRequest.DisplayedResult.Where(i => i.RequestStatu == RequestStatu.KabulEdildi))
+                                {
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableRowCell>@Event.Member.FullName</TableRowCell>
+                                            <TableRowCell>@Event.RequestStatu</TableRowCell>
+                                        </TableRow>
+                                    </TableBody>
+                                }
+                                <Pagination class="col-8 col-md-12 col-lg-8 m-auto">
+                                    <PaginationItem @onclick="Previous">
+                                        <PaginationLink>
+                                            <span aria-hidden="true">«</span>
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                    @{
+                                        foreach (var i in EventRequest.DisplayedPageNumbers)
+                                        {
+                                            var pageNumberAsString = i.ToString();
+                                            <PaginationItem @key="pageNumberAsString" Active="@(EventRequest.CurrentPage == i)">
+                                                <PaginationLink Page="@pageNumberAsString" Clicked="async ()=>{await GoToPage(i);}">
+                                                    @pageNumberAsString
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                        }
+                                    }
+                                    <PaginationItem @onclick="Next">
+                                        <PaginationLink>
+                                            <span aria-hidden="true">»</span>
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                </Pagination>
+                            </Table>
+
+                        </CardBody>
+                    </Card>
+                </Container>
+            </TabPanel>
+            <TabPanel Name="Rejected" >
+                <Container Class="mg-top 5">
+                    <Card>
+                        <CardBody>
+                            <Table Hoverable>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHeaderCell>İsteği Atan</TableHeaderCell>
+                                        <TableHeaderCell>#</TableHeaderCell>
+                                    </TableRow>
+                                </TableHeader>
+                                @foreach (var Event in EventRequest.DisplayedResult.Where(i => i.RequestStatu == RequestStatu.Reddedildi))
+                                {
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableRowCell>@Event.Member.FullName</TableRowCell>
+                                            <TableRowCell>@Event.RequestStatu</TableRowCell>
+                                        </TableRow>
+                                    </TableBody>
+                                }
+                                <Pagination class="col-8 col-md-12 col-lg-8 m-auto">
+                                    <PaginationItem @onclick="Previous">
+                                        <PaginationLink>
+                                            <span aria-hidden="true">«</span>
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                    @{
+                                        foreach (var i in EventRequest.DisplayedPageNumbers)
+                                        {
+                                            var pageNumberAsString = i.ToString();
+                                            <PaginationItem @key="pageNumberAsString" Active="@(EventRequest.CurrentPage == i)">
+                                                <PaginationLink Page="@pageNumberAsString" Clicked="async ()=>{await GoToPage(i);}">
+                                                    @pageNumberAsString
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                        }
+                                    }
+                                    <PaginationItem @onclick="Next">
+                                        <PaginationLink>
+                                            <span aria-hidden="true">»</span>
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                </Pagination>
+                            </Table>
+
+                        </CardBody>
+                    </Card>
+                </Container>
+            </TabPanel>
+        </Content>
+    </Tabs>
+</div>
 @code {
+    string selectedTab = "Requests";
+
+    private Task OnSelectedTabChanged(string name)
+    {
+        selectedTab = name;
+
+        return Task.CompletedTask;
+    }
 
 }

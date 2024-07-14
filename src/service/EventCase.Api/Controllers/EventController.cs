@@ -45,6 +45,24 @@ public class EventController : Controller
     }
 
     [HttpGet]
+    public async Task<ServiceResponse<EventDto>> GetEventById([FromQuery]Guid Id)
+    {
+        try
+        {
+            var entity = await _eventAppService.GetEvent(Id);
+            var response = new ServiceResponse<EventDto>()
+            {
+                Success = true,
+                Data = entity.Data
+            };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+    [HttpGet]
 
     public async Task<ServiceResponse<List<Event>>> GetAllEvents()
     {

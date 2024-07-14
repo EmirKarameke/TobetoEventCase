@@ -16,36 +16,44 @@ public class TokenService
         this.localStorageService = localStorageService;
     }
 
+    public async Task<bool> IsTokenExist()
+    {
+        var token = await localStorageService.GetItemAsStringAsync("token");
+        if (token == null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     public async Task<JwtSecurityToken> ReadToken()
     {
         var token = await localStorageService.GetItemAsStringAsync("token");
+
+        if (string.IsNullOrEmpty(token))
+        {
+            throw new ArgumentNullException(nameof(token), "Token cannot be null or empty.");
+        }
+
         var handler = new JwtSecurityTokenHandler();
-        var jwtToken = handler.ReadJwtToken(token);
-        return jwtToken;
+        return handler.ReadJwtToken(token);
     }
+
     public async Task<Guid> GetMemberId()
     {
         var readedToken = await ReadToken();
-        if (readedToken != null)
-        {
-            var nameIdentifierClaim = readedToken.Claims
-                .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
-            if (nameIdentifierClaim == null || string.IsNullOrEmpty(nameIdentifierClaim.Value))
-            {
-                throw new InvalidOperationException("NameIdentifier claim is not found or is empty.");
-            }
-            else
-            {
-                return MemberId = Guid.Parse(nameIdentifierClaim.Value);
-            }
+        var nameIdentifierClaim = readedToken.Claims
+            .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
-        }
-        else
+        if (nameIdentifierClaim == null || string.IsNullOrEmpty(nameIdentifierClaim.Value))
         {
             throw new InvalidOperationException("NameIdentifier claim is not found or is empty.");
         }
 
-
+        return MemberId = Guid.Parse(nameIdentifierClaim.Value);
     }
 }

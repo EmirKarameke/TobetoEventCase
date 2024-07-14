@@ -13,17 +13,20 @@ namespace EventCase.Blazor.Web.Pages
         [Inject] IHttpService httpService { get; set; }
         [Inject] TokenService TokenService { get; set; }
         public PagedList<EventTableItemDto> EventList { get; set; }
-        // public int CurrentPage { get; set; } = 1;
         public EventRequestDto EventRequest { get; set; }
         public List<EventRequestDto> EventRequestList { get; set; }
-
+        private bool token;
         protected override async Task OnInitializedAsync()
         {
             EventRequest = new EventRequestDto();
             EventList = new PagedList<EventTableItemDto>();
             EventRequestList = new List<EventRequestDto>();
-            await CheckRequest();
-            await GetPaginatedEventsList();
+             token = await TokenService.IsTokenExist();
+            if (token)
+            {
+                await CheckRequest();
+                await GetPaginatedEventsList();
+            }
         }
         public async Task GetPaginatedEventsList()
         {
@@ -31,6 +34,7 @@ namespace EventCase.Blazor.Web.Pages
             request.Url = request.Url + $"Event/GetEventList?page={EventList.CurrentPage}";
             var response = await httpService.GetListAsync<PagedList<EventDto>>(request);
             var memberId = await TokenService.GetMemberId();
+
             EventList = new PagedList<EventTableItemDto>()
             {
                 CurrentPage = EventList.CurrentPage,
@@ -77,7 +81,7 @@ namespace EventCase.Blazor.Web.Pages
         {
             var memberId = await TokenService.GetMemberId();
             ServiceRequestBase serviceRequestBase = new ServiceRequestBase();
-            serviceRequestBase.Url = serviceRequestBase.Url + $"EventRequest/GetAllEventRequestsByMemberId/{memberId}";
+            serviceRequestBase.Url = serviceRequestBase.Url + $"EventRequest/GetAllEventRequestsByMemberId?id={memberId}";
             var result = await httpService.GetListAsync<List<EventRequestDto>?>(serviceRequestBase);
             if (result.Success)
             {
@@ -85,7 +89,7 @@ namespace EventCase.Blazor.Web.Pages
             }
 
         }
-
+        
 
 
         private const string PREVIOUS = "previous";

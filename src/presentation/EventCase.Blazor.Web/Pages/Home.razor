@@ -19,16 +19,19 @@
                         <TableRowCell>@Event.Date</TableRowCell>
                         <TableRowCell>@Event.Time</TableRowCell>
                         <TableRowCell>@Event.Location</TableRowCell>
+                       
                         <TableRowCell>
                             @if (Event.Status == null)
                             {
-                                <Button Color="Color.Success" Clicked="() => JoinRequest(Event.Id)"> Katıl </Button>
+                                <Button Color="Color.Success" Clicked="() => JoinRequest(Event.Id)" > Katıl </Button>
                             }
                             else
                             {
                                 <span class="label label-badge">@Event.Status.ToString()</span>
                             }
                         </TableRowCell>
+                            
+
 
 
                     </TableRow>

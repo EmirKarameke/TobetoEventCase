@@ -1,5 +1,6 @@
 ﻿using EventCase.Application.Contract.EventRequests.Dtos;
 using EventCase.Application.Contract.ServiceTypes;
+using EventCase.Common.List;
 
 namespace EventCase.Application.Contract.EventRequests
 {
@@ -10,6 +11,6 @@ namespace EventCase.Application.Contract.EventRequests
         Task<ServiceResponse<bool>> Delete(Guid Id);
         Task<ServiceResponse<List<EventRequestDto>>> GetList(Guid id);
         Task<ServiceResponse<List<EventRequestDto>>> GetList();
-        Task<ServiceResponse<List<EventRequestDto>>> GetListById(Guid Id);
+        Task<ServiceResponse<PagedList<EventRequestWithMemberDto>>> GetListById(Guid Id, int pageNumber);
     }
 }

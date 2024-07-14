@@ -9,5 +9,6 @@ public class EventRequestMapProfiles : Profile
     public EventRequestMapProfiles()
     {
         CreateMap<EventRequestDto, EventRequest>().ReverseMap();
+        CreateMap<EventRequestWithMemberDto, EventRequest>().ReverseMap();
     }
 }

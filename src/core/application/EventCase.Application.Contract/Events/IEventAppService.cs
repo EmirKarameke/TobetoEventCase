@@ -13,4 +13,5 @@ public interface IEventAppService
     Task<ServiceResponse<List<Event>>> GetList();//dto dönecek
 
     Task<ServiceResponse<PagedList<EventDto>>> GetPagedList(int pageNumber);
+    Task<ServiceResponse<EventDto>> GetEvent(Guid Id);
 }
