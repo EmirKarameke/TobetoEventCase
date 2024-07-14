@@ -14,14 +14,22 @@ public partial class MyEvents
     [Inject] AuthenticationStateProvider AuthProvider { get; set; }
     public EventDto EventDto { get; set; }
     public List<EventDto> ListEvents { get; set; }
-    public EventDto SelectedEvent {  get; set; }
+    public EventDto SelectedEvent { get; set; }
     protected override async void OnInitialized()
     {
         SelectedEvent = new EventDto();
         EventDto = new EventDto();
+        EventDto.Date = DateOnly.FromDateTime(DateTime.Now);
         ListEvents = new List<EventDto>();
         await GetEventList();
         TokenStuf();
+    }
+    bool toastVisible = false;
+    string toastMessage;
+    private bool ShowToast(string Message)
+    {
+        toastMessage = Message;
+        return toastVisible = true;
     }
     public async Task AddEvent()
     {
@@ -35,19 +43,19 @@ public partial class MyEvents
         if (result.Success)
         {
             await GetEventList();
-
+            ShowToast("Etkinlik Başarıyla Eklendi");
         }
     }
 
     public async Task DeleteEvent(Guid Id)
     {
         ServiceRequestBase serviceRequestBase = new ServiceRequestBase();
-        serviceRequestBase.Url = serviceRequestBase.Url + "Event/DeleteEvent?Id="+Id;
+        serviceRequestBase.Url = serviceRequestBase.Url + "Event/DeleteEvent?Id=" + Id;
         var result = await httpService.DeleteAsync<bool>(serviceRequestBase);
         if (result.Success)
         {
             await GetEventList();
-
+            ShowToast("Etkinlik Başarıyla Silindi");
         }
     }
     public async Task UpdateEvent()
@@ -62,7 +70,7 @@ public partial class MyEvents
         if (result.Success)
         {
             await GetEventList();
-
+            ShowToast("Etkinlik Başarıyla Güncellendi");
         }
     }
     public async Task GetEventList()
@@ -82,6 +90,6 @@ public partial class MyEvents
         var readedToken = await ((AuthStateProvider)AuthProvider).ReadToken();
         var nameIdentifierClaim = readedToken.Claims
                     .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
-       MemberId= Guid.Parse(nameIdentifierClaim);
+        MemberId = Guid.Parse(nameIdentifierClaim);
     }
 }

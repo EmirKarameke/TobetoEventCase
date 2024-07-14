@@ -1,13 +1,5 @@
 ﻿using EventCase.Application.Contract.EventRequests.Dtos;
-using EventCase.Application.Contract.Events.Dtos;
 using EventCase.Application.Contract.ServiceTypes;
-using EventCase.Domain.EventRequests;
-using EventCase.Domain.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventCase.Application.Contract.EventRequests
 {
@@ -16,6 +8,8 @@ namespace EventCase.Application.Contract.EventRequests
         Task<ServiceResponse<EventRequestDto>> Create(EventRequestDto eventRequest);
         Task<ServiceResponse<EventRequestDto>> Update(EventRequestDto eventRequest);
         Task<ServiceResponse<bool>> Delete(Guid Id);
-        Task<ServiceResponse<List<EventRequest>>> GetList();
+        Task<ServiceResponse<List<EventRequestDto>>> GetList(Guid id);
+        Task<ServiceResponse<List<EventRequestDto>>> GetList();
+        Task<ServiceResponse<List<EventRequestDto>>> GetListById(Guid Id);
     }
 }

@@ -1,13 +1,17 @@
 using EventCase.Api.Filters;
+using EventCase.Application.Contract.EventRequests;
 using EventCase.Application.Contract.Events;
+using EventCase.Application.EventRequests;
 using EventCase.Application.Events;
 using EventCase.Auth;
 using EventCase.Auth.Permissions;
 using EventCase.Auth.Roles;
 using EventCase.Auth.Roles.RolePermissions;
 using EventCase.Auth.Users;
+using EventCase.Domain.EventRequests;
 using EventCase.Domain.Events;
 using EventCase.EntityFrameworkCore;
+using EventCase.EntityFrameworkCore.EventRequests;
 using EventCase.EntityFrameworkCore.Events;
 using EventCase.EntityFrameworkCore.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -78,10 +82,13 @@ builder.Services.AddScoped<IUserPermissionRepository<Guid>, UserPermissionReposi
 builder.Services.AddScoped<IPermissionRepository<Guid>, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository<Guid>, RoleRepository>();
 builder.Services.AddScoped<IRolePermissionRepository<Guid>, RolePermissionRepository>();
-builder.Services.AddScoped<IEventRepository, EventRepository>();
-
-builder.Services.AddScoped<IAuthService<Guid>, AuthService<Guid>>();
 builder.Services.AddScoped<IEventAppService, EventAppService>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IAuthService<Guid>, AuthService<Guid>>();
+builder.Services.AddScoped<IEventRequestAppService, EventRequestAppService>();
+builder.Services.AddScoped<IEventRequestRepository, EventRequestRepository>();
+builder.Services.AddScoped<EventBusinessExeptions>();
+builder.Services.AddScoped<EventRequestBusinessExeptions>();
 // JWT kimlik doðrulama servislerini ekleyin
 builder.Services.AddAuthentication(options =>
 {

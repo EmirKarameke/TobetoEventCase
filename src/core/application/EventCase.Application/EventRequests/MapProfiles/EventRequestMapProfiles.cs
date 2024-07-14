@@ -1,17 +1,13 @@
 ﻿using AutoMapper;
+using EventCase.Application.Contract.EventRequests.Dtos;
 using EventCase.Domain.EventRequests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventCase.Application.EventRequests.MapProfiles;
 
-public class EventRequestMapProfiles: Profile
+public class EventRequestMapProfiles : Profile
 {
-    public EventRequestMapProfiles() 
+    public EventRequestMapProfiles()
     {
-        CreateMap<EventRequest, EventRequest>().ReverseMap();
+        CreateMap<EventRequestDto, EventRequest>().ReverseMap();
     }
 }

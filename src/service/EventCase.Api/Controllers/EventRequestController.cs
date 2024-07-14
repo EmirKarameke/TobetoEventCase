@@ -1,17 +1,13 @@
 ﻿using AutoMapper;
-using EventCase.Application.Contract.Events.Dtos;
-using EventCase.Application.Contract.Events;
-using EventCase.Application.Contract.ServiceTypes;
-using EventCase.Domain.Events;
-using Microsoft.AspNetCore.Mvc;
 using EventCase.Application.Contract.EventRequests;
 using EventCase.Application.Contract.EventRequests.Dtos;
-using EventCase.Domain.EventRequests;
+using EventCase.Application.Contract.ServiceTypes;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EventCase.Api.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]/")]
+[Route("[controller]/[action]/{id?}")]
 public class EventRequestController : Controller
 {
     private readonly IMapper _mapper;
@@ -23,7 +19,7 @@ public class EventRequestController : Controller
     }
 
     [HttpPost]
-    public async Task<ServiceResponse<EventRequestDto>> CreateEvent(EventRequestDto eventRequest)
+    public async Task<ServiceResponse<EventRequestDto>> CreateEventRequest(EventRequestDto eventRequest)
     {
         try
         {
@@ -48,12 +44,12 @@ public class EventRequestController : Controller
 
     [HttpGet]
 
-    public async Task<ServiceResponse<List<EventRequest>>> GetAllEvents()
+    public async Task<ServiceResponse<List<EventRequestDto>>> GetAllEventRequests()
     {
         try
         {
             var entities = await _eventRequestAppService.GetList();
-            var response = new ServiceResponse<List<EventRequest>>()
+            var response = new ServiceResponse<List<EventRequestDto>>()
             {
                 Success = true,
                 Data = entities.Data
@@ -67,8 +63,32 @@ public class EventRequestController : Controller
 
 
     }
+
+
+    [HttpGet]
+    public async Task<ServiceResponse<List<EventRequestDto>>> GetAllEventRequestsByMemberId(Guid id)
+    {
+        try
+        {
+            var entities = await _eventRequestAppService.GetList(id);
+            var response = new ServiceResponse<List<EventRequestDto>>()
+            {
+                Success = true,
+                Data = entities.Data
+            };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+
+
+    }
+
+
     [HttpPut]
-    public async Task<ServiceResponse<EventRequestDto>> UpdateEvent(EventRequestDto eventRequest)
+    public async Task<ServiceResponse<EventRequestDto>> UpdateEventRequest(EventRequestDto eventRequest)
     {
         try
         {
@@ -87,7 +107,7 @@ public class EventRequestController : Controller
     }
 
     [HttpDelete]
-    public async Task<ServiceResponse<bool>> DeleteEvent([FromQuery] Guid Id)
+    public async Task<ServiceResponse<bool>> DeleteEventRequest([FromQuery] Guid Id)
     {
         try
         {

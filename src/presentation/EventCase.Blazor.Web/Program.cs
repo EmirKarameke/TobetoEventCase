@@ -16,7 +16,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 builder.Services.AddScoped<IHttpService, HttpService>();
 builder.Services.AddScoped<HttpClient>();
 builder.Services.AddScoped<ServiceRequestBase>();
-
+builder.Services.AddScoped<TokenService>();
 builder.Services.AddAuthorizationCore();
 builder.Services
     .AddBlazorise(options =>

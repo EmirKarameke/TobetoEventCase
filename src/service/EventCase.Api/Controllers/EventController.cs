@@ -2,7 +2,7 @@
 using EventCase.Application.Contract.Events;
 using EventCase.Application.Contract.Events.Dtos;
 using EventCase.Application.Contract.ServiceTypes;
-using EventCase.Common.Entities;
+using EventCase.Common.List;
 using EventCase.Domain.Events;
 using Microsoft.AspNetCore.Mvc;
 
@@ -97,5 +97,15 @@ public class EventController : Controller
             throw;
         }
 
+    }
+
+    [HttpGet]
+    public async Task<ServiceResponse<PagedList<EventDto>>> GetEventList(int page)
+    {
+        var response = new ServiceResponse<PagedList<EventDto>>();
+        var result = await _eventAppService.GetPagedList(page);
+        response.Data = result.Data;
+        result.Success = result.Success;
+        return response;
     }
 }

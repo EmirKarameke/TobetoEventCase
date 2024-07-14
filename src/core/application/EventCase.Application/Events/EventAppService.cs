@@ -2,6 +2,7 @@
 using EventCase.Application.Contract.Events;
 using EventCase.Application.Contract.Events.Dtos;
 using EventCase.Application.Contract.ServiceTypes;
+using EventCase.Common.List;
 using EventCase.Domain.Events;
 
 namespace EventCase.Application.Events;
@@ -11,17 +12,23 @@ public class EventAppService : IEventAppService
 
     IEventRepository _eventRepository;
     IMapper _mapper;
-
-    public EventAppService(IEventRepository eventRepository, IMapper mapper)
+    EventBusinessExeptions _eventBusinessExeptions;
+    public EventAppService(IEventRepository eventRepository, IMapper mapper, EventBusinessExeptions eventBusinessExeptions)
     {
         _eventRepository = eventRepository;
         _mapper = mapper;
+        _eventBusinessExeptions = eventBusinessExeptions;
     }
 
     public async Task<ServiceResponse<EventDto>> Create(EventDto Event)
     {
         var result = new ServiceResponse<EventDto>();
+        _eventBusinessExeptions.CheckEventDate(Event);
+
         var createdEvent = _mapper.Map<Event>(Event);
+
+
+
         try
         {
             var entity = await _eventRepository.AddAsync(createdEvent);
@@ -74,10 +81,32 @@ public class EventAppService : IEventAppService
         return result;
     }
 
+    public async Task<ServiceResponse<PagedList<EventDto>>> GetPagedList(int pageNumber)
+    {
+        int pageSize = 10;
+        var response = new ServiceResponse<PagedList<EventDto>>();
+        var query = await _eventRepository.GetAllAsync();
+
+        query = query.Where(i => i.Date > DateOnly.FromDateTime(DateTime.Now));
+        var totalCount = query.Count();
+
+        var displayResult = query.OrderBy(i => i.Date).Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(i => _mapper.Map<EventDto>(i)).ToList();
+        var list = new PagedList<EventDto>()
+        {
+            TotalRowCount = totalCount,
+            DisplayedResult = displayResult
+        };
+        list.SetPageNumbers();
+
+        response.Data = list;
+        response.Success = true;
+        return response;
+    }
 
     public async Task<ServiceResponse<EventDto>> Update(EventDto Event)
     {
         var result = new ServiceResponse<EventDto>();
+        _eventBusinessExeptions.CheckEventDate(Event);
         var oldEvent = await _eventRepository.SingleOrDefaultAsync(e => e.Id == Event.Id);
         var updatedEvent = _mapper.Map(Event, oldEvent);
         try

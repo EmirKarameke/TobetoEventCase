@@ -1,7 +1,79 @@
 ﻿@page "/"
+<div class="control-section d-flex p-2">
+    <div class="col-8 col-md-12 col-lg-8 m-auto">
+        <Table Hoverable Class="table table-striped">
+            <TableHeader>
+                <TableRow>
+                    <TableHeaderCell>Etkinlik Adı</TableHeaderCell>
+                    <TableHeaderCell>Etkinlik Tarihi</TableHeaderCell>
+                    <TableHeaderCell>Etkinlik Saati</TableHeaderCell>
+                    <TableHeaderCell>Düzenlendiği Yer</TableHeaderCell>
+                    <TableHeaderCell>#</TableHeaderCell>
+                </TableRow>
+            </TableHeader>
+            @foreach (var Event in EventList.DisplayedResult)
+            {
+                <TableBody>
+                    <TableRow>
+                        <TableRowHeader>@Event.Name</TableRowHeader>
+                        <TableRowCell>@Event.Date</TableRowCell>
+                        <TableRowCell>@Event.Time</TableRowCell>
+                        <TableRowCell>@Event.Location</TableRowCell>
+                        <TableRowCell>
+                            @if (Event.Status == null)
+                            {
+                                <Button Color="Color.Success" Clicked="() => JoinRequest(Event.Id)"> Katıl </Button>
+                            }
+                            else
+                            {
+                                <span class="label label-badge">@Event.Status.ToString()</span>
+                            }
+                        </TableRowCell>
 
-<PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+                    </TableRow>
+                </TableBody>
+            }
+        </Table>
+    </div>
+</div>
+<Pagination class="col-8 col-md-12 col-lg-8 m-auto">
+    <PaginationItem @onclick="Previous">
+        <PaginationLink>
+            <span aria-hidden="true">«</span>
+        </PaginationLink>
+    </PaginationItem>
+    @{
+        foreach (var i in EventList.DisplayedPageNumbers)
+        {
+            var pageNumberAsString = i.ToString();
+            <PaginationItem @key="pageNumberAsString" Active="@(EventList.CurrentPage == i)">
+                <PaginationLink Page="@pageNumberAsString" Clicked="async ()=>{await GoToPage(i);}">
+                    @pageNumberAsString
+                </PaginationLink>
+            </PaginationItem>
+        }
+    }
+    <PaginationItem @onclick="Next">
+        <PaginationLink>
+            <span aria-hidden="true">»</span>
+        </PaginationLink>
+    </PaginationItem>
+</Pagination>
 
-Welcome to your new app.
+<Toaster>
+    <Toast @bind-Visible="@toastVisible">
+        <ToastHeader>
+            <Strong Margin="Margin.IsAuto.FromEnd">EventCase</Strong>
+            <Small>Şimdi</Small>
+            <CloseButton />
+        </ToastHeader>
+        <ToastBody>
+            İsteğiniz İletildi
+        </ToastBody>
+    </Toast>
+</Toaster>
+
+@code {
+
+}
